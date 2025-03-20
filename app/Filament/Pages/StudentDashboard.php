@@ -19,6 +19,11 @@ class StudentDashboard extends Page
 
     protected static string $view = 'filament.pages.student-dashboard';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return Auth::check() && Auth::user()->hasRole('student');
+    }
+
     public function mount(): void
     {
         if (!Auth::user()->hasRole('student')) {

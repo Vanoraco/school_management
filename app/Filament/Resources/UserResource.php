@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -22,6 +23,16 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $navigationGroup = 'User Management';
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return Auth::check() && Auth::user()->hasRole('admin');
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::check() && Auth::user()->hasRole('admin');
+    }
 
     public static function form(Form $form): Form
     {
