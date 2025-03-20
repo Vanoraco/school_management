@@ -33,7 +33,9 @@ class StudentDashboard extends Page
 
     protected function getHeaderWidgets(): array
     {
-        return [];
+        return [
+            StudentGradesWidget::class,
+        ];
     }
 
     protected function getFooterWidgets(): array
