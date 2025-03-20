@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\StudentDashboard;
+use App\Http\Middleware\RestrictStudentAccess;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -52,11 +54,12 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->plugins([
-                new FilamentShieldPlugin(),
-            ])
             ->authMiddleware([
                 Authenticate::class,
+                RestrictStudentAccess::class,
+            ])
+            ->plugins([
+                new FilamentShieldPlugin(),
             ]);
     }
 }

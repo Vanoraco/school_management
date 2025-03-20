@@ -26,6 +26,10 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'profile_picture',
+        'is_active',
+        'last_login_at',
+        'email_verified_at',
     ];
 
     /**
@@ -48,16 +52,26 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->hasRole(['admin', 'teacher']);
+        return $this->hasRole(['admin', 'teacher', 'student']);
     }
 
     public function studentGrades(): HasMany
     {
         return $this->hasMany(StudentGrade::class);
+    }
+
+    public function getProfilePictureUrlAttribute(): string
+    {
+        if ($this->profile_picture) {
+            return asset('storage/' . $this->profile_picture);
+        }
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 }
