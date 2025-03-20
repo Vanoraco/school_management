@@ -67,6 +67,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(StudentGrade::class);
     }
 
+    public function subjectRegistrations(): HasMany
+    {
+        return $this->hasMany(SubjectRegistration::class);
+    }
+
     public function getProfilePictureUrlAttribute(): string
     {
         if ($this->profile_picture) {

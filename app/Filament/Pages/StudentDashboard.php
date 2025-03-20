@@ -33,9 +33,7 @@ class StudentDashboard extends Page
 
     protected function getHeaderWidgets(): array
     {
-        return [
-            StudentGradesWidget::class,
-        ];
+        return [];
     }
 
     protected function getFooterWidgets(): array
@@ -43,5 +41,15 @@ class StudentDashboard extends Page
         return [
             StudentGradesTableWidget::class,
         ];
+    }
+
+    protected function getHeaderWidgetsData(): array
+    {
+        return [];
+    }
+
+    protected function getFooterWidgetsData(): array
+    {
+        return [];
     }
 } 

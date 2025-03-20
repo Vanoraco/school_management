@@ -41,20 +41,31 @@ class StudentGradeResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
-                        Select::make('user_id')
-                            ->label('Student')
-                            ->relationship('user', 'name', function ($query) {
-                                $query->role('student');
-                            })
-                            ->required()
-                            ->searchable()
-                            ->preload(),
                         Select::make('subject_id')
                             ->label('Subject')
                             ->relationship('subject', 'name', fn ($query) => $subjectQuery)
                             ->required()
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->live()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                $set('user_id', null);
+                            }),
+                        Select::make('user_id')
+                            ->label('Student')
+                            ->relationship('user', 'name', function ($query, $get) {
+                                $subjectId = $get('subject_id');
+                                if ($subjectId) {
+                                    $query->whereHas('subjectRegistrations', function ($query) use ($subjectId) {
+                                        $query->where('subject_id', $subjectId);
+                                    });
+                                }
+                                $query->role('student');
+                            })
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->disabled(fn ($get) => !$get('subject_id')),
                         Select::make('grade_id')
                             ->label('Grade')
                             ->relationship('grade', 'name')
